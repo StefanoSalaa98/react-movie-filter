@@ -33,8 +33,13 @@ body {
 
 ul {
   display: flex;
+  flex-wrap: wrap;
   gap: 40px;
   list-style-type: none;
+}
+
+li {
+  width: 250px;
 }
 
 .filtra {

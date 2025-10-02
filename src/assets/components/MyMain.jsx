@@ -9,21 +9,79 @@ const MyMain = () => {
         { title: 'Titanic', genre: 'Romantico' },
         { title: 'Batman', genre: 'Azione' },
         { title: 'Interstellar', genre: 'Fantascienza' },
-        { title: 'Pulp Fiction', genre: 'Thriller' }
+        { title: 'Pulp Fiction', genre: 'Thriller' },
+        { title: "Inception", genre: "Fantascienza" },
+        { title: "Il Silenzio degli Innocenti", genre: "Thriller" },
+        { title: "La La Land", genre: "Romantico" },
+        { title: "Mad Max: Fury Road", genre: "Azione" },
+        { title: "The Hangover", genre: "Commedia" },
+        { title: "Forrest Gump", genre: "Drammatico" },
+        { title: "Seven", genre: "Thriller" },
+        { title: "Pretty Woman", genre: "Romantico" },
+        { title: "Mission: Impossible - Fallout", genre: "Azione" },
+        { title: "Una Notte da Leoni", genre: "Comico" },
+        { title: "Il Padrino", genre: "Drammatico" },
+        { title: "Blade Runner 2049", genre: "Fantascienza" },
+        { title: "Drive", genre: "Thriller" },
+        { title: "Vogliamo vivere!", genre: "Comico" }
     ]
 
     // stato del campo di ricerca del genere
     const [searchGenre, setSearchGenre] = useState("");
     // stato del campo di ricerca del titolo
     const [searchTitle, setSearchTitle] = useState("");
+
+    // stato del campo elenco film 
+    const [filmList, setFilmList] = useState(films);
     // stato del array filtrato
-    const [filteredTasks, setFilteredTasks] = useState(films);
+    const [filteredFilms, setFilteredFilms] = useState(films);
 
+    // Stati per memorizzare i valori dei campi utente
+    const [newTitle, setNewTitle] = useState('');
+    const [newGenre, setnewGenre] = useState('');
 
+    // const [listGenre, setListGenre] = useState("");
+
+    // creo una lista con l'elenco dei generi presenti
+    // let startingList = ["Qualsiasi"]
+    // films.forEach(film => {
+    //     if (!startingList.includes(film.genre)) {
+    //         startingList.push(film.genre);
+    //     }
+    // })
+
+    //creo una lista dei generi possibili
+    const genreList = [
+        "Qualsiasi",
+        "Fantascienza",
+        "Thriller",
+        "Romantico",
+        "Azione",
+        "Commedia",
+        "Comico",
+        "Drammatico"
+    ]
+
+    const newElement = e => {
+        e.preventDefault();
+        // oggetto del nuovo film inserito
+        const updatedFilm = { title: newTitle, genre: newGenre }
+
+        const updatedList = [...filmList];
+        updatedList.push(updatedFilm);
+        // ripulisco il form
+        setNewTitle("")
+        setnewGenre("")
+        // setNewFilm(updatedFilm)
+        // films.push(updatedFilm)
+        setFilmList(updatedList);
+        // console.log("films:", films)
+        // console.log("filmList", filmList)
+    }
 
     useEffect(() => {
-        setFilteredTasks(
-            films.filter(film => {
+        setFilteredFilms(
+            filmList.filter(film => {
                 // controllo lo stato dei campi di ricerca del genere e del titolo
                 const checkGenre = searchGenre !== "" && searchGenre !== "Qualsiasi";
                 const checkTitle = searchTitle !== "" && searchTitle !== "Qualsiasi";
@@ -45,8 +103,9 @@ const MyMain = () => {
                 }
             })
         );
+        console.log("filteredFilms:", filteredFilms)
 
-    }, [searchGenre, searchTitle]);
+    }, [searchGenre, searchTitle, filmList]);
 
     return (
         <>
@@ -56,11 +115,10 @@ const MyMain = () => {
                 <select id="generi" name="scelta-genere"
                     onChange={(e) => { setSearchGenre(e.target.value) }}>
 
-                    <option value="Qualsiasi">Qualsiasi</option>
-                    <option value="Fantascienza">Fantascienza</option>
-                    <option value="Thriller">Thriller</option>
-                    <option value="Romantico">Romantico</option>
-                    <option value="Azione">Azione</option>
+                    {genreList.map((genre, index) => (
+
+                        <option key={index} value={genre}> {genre} </option>
+                    ))}
 
                 </select>
 
@@ -70,24 +128,51 @@ const MyMain = () => {
                     onChange={(e) => { setSearchTitle(e.target.value) }}>
 
                     <option value="Qualsiasi">Qualsiasi</option>
-                    <option value="Inception">Inception</option>
-                    <option value="Il Padrino">Il Padrino</option>
-                    <option value="Titanic">Titanic</option>
-                    <option value="Batman">Batman</option>
-                    <option value="Interstellar">Interstellar</option>
-                    <option value="Pulp Fiction">Pulp Fiction</option>
+                    {filteredFilms.map((film, index) => (
+
+                        <option key={index} value={film.title}> {film.title} </option>
+                    ))}
 
                 </select>
-            </div>
+
+                {/* form per inserire un nuovo film */}
+
+                <form onSubmit={newElement}>
+                    {/* campo dove l'utente può inserire un nuovo titolo */}
+                    <label>TITOLO:</label>
+                    <input
+                        type="text"
+                        placeholder='Inserisci un nuovo titolo'
+                        value={newTitle}
+                        onChange={(e) => { setNewTitle(e.target.value) }}
+                    />
+                    {/* campo dove l'utente può inserire il genere del nuovo film */}
+                    <label>GENERE:</label>
+                    <select
+                        id="generi-nuovi-film"
+                        name="scelta-genere-nuovi-film"
+                        onChange={(e) => { setnewGenre(e.target.value) }}>
+
+                        <option value="Fantascienza">Fantascienza</option>
+                        <option value="Thriller">Thriller</option>
+                        <option value="Romantico">Romantico</option>
+                        <option value="Azione">Azione</option>
+                        <option value="Commedia">Commedia</option>
+                        <option value="Comico">Comico</option>
+                        <option value="Drammatico">Drammatico</option>
+
+                    </select>
 
 
+                    <button type="submit">Invia</button>
+                </form>
 
+            </div >
+
+
+            {/* Stampo a schermo la lista dei film filtrati */}
             <ul>
-                <li>
-                    <h2>TITOLO:</h2>
-                    <h3>GENERE:</h3>
-                </li>
-                {filteredTasks.map((film, index) => (
+                {filteredFilms.map((film, index) => (
                     <li
                         key={index}>
                         <MyFilm
@@ -97,6 +182,7 @@ const MyMain = () => {
                     </li>
                 ))}
             </ul>
+
         </>
     )
 }

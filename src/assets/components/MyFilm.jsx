@@ -5,7 +5,7 @@ const MyFilm = (props) => {
     return (
         <>
             <h2>{title}</h2>
-            <h3>{genre}</h3>
+            <h4>({genre})</h4>
         </>
     )
 
